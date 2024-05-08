@@ -1,0 +1,301 @@
+What is kOps?
+==> Kubernetes kOps is a free and open-source command-line tool for configuring and maintaining Kubernetes clusters and provisioning the cloud infrastructure needed to run them.
+
+==> With kOps, teams can automate the management of Kubernetes clusters. For example, kOps can create, apply, and update cluster configurations. It can also provision the cloud infrastructure that clusters require, such as (for AWS) virtual private clouds (VPCs), autoscaling groups, security groups, and IAM roles
+
+##Before doing this lab there are some prerequisites.
+***************************************************
+1.Domain for Kubernetes DNS records (eg:- purchase a domain from hostinger or Godaddy or from AWS route53)
+2.Create a Linux VM and set some tools like kops, kubectl, ssh keys, AWS CLI.
+3.Log into the AWS account and create an S3 bucket, IAM user for AWSCLI, Route53 Hosted Zone (if you have a domain in hostinger or Godaddy).
+
+
+#Step1: Create hosted zone from the route 53. To create a hosted zone from the route53 (If you have purchased the domain from Route53 then by default there will be a hosted zone has been created with NS record)
+#Step2: In AWS account and attach IAM Role to EC2 Instance.
+  - Kops need permissions to access (admin access).
+         1. EC2
+         2. S3
+         3. VPC
+         4. Route53 Domain Name
+         5.Autoscaling
+#Step3:  Create Hosted-Zone on Route53 add Value/Route traffic to name space Inside DNS Server.
+#Step4: Create AWS_VPC in that subnet, IGW on ubuntu Server and assign role.
+#Step5: Generate ssh-keys 
+#Step6: Download Kops & Kubectl to /usr/local/bin
+#Step7: Edit .bashrc and add all the env variables
+#Step8: Create a Cluster using Kops and generate Cluster file.
+
+
+##Inside Terminal folling step:
+******************************
+
+==> Sudo apt update
+
+#Step5: Generate ssh-key - This keys will used by yhe kubernetes nodes.
+******
+
+==> ssh-keygen  (Click enter)
+
+==> ll .ssh/ 
+               --> id_rsa (Private Key)
+               --> id_rsa.pub (public Key)
+
+==> cd
+
+#Step6: Download Kops & Kubectl to /usr/local/bin
+*******
+
+##KopsDownload:
+==============
+#1.Kops Github in that select Kops-linux-amd64 copy the URL  
+
+
+==> cd /usr/local/bin/
+
+==> wget https://github.com/kubernetes/kops/releases/download/v1.28.4/kops-linux-amd64
+==> ll
+       ------> kops-linux-amd64
+
+#2.Rename as kops-linux-amd64 to Kops
+
+==> mv kops-linux-amd64 kops
+==> chmod 777 kops
+
+
+##Kubectl download
+   ===============
+==> curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+==> ll
+==> chmod 777 kubectl 
+
+#1.To check the Kops& kubectl download are not using below command:
+
+==> cd
+==> kops version
+==> kubectl version 
+
+#Step7: Edit .bashrc and add all the env variables in that termal and save:
+*******
+
+==> nano .bashrc
+
+==> Inside .bashrc we need to past blow commnand's
+
+
+export NAME=jagando.online
+export KOPS_STATE_STORE=s3://jagando.online 
+export AWS_REGION=us-west-2
+export CLUSTER_NAME=jagando.online
+export EDITOR='/usr/bin/nano'
+alias ku=kubectl
+
+
+
+==> To exit & save terminal:
+                       ----> ctrl + o 
+                       ----> enter
+                       ----> ctrl + x
+==> source .bashrc or exit (command used)
+==> env
+
+Step:8 ==> Create a Cluster using Kops and generate Cluster file.
+******
+---- #DRY RUN# ----
+     *********
+#Hint:
+=====
+kops create cluster --name=<Give_cluster-name> \
+--state=s3://<S3_bucket-name> --zones=us-east-1a,us-east-1b,us-east-1c \
+--node-count=3 --master-count=3 --node-size=t3.medium --master-size=t3.medium \
+--master-zones=us-east-1a,us-east-1b,us-east-1c --master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_rsa.pub \
+--dns-zone=<Route53_DNS-name> --yes
+
+
+#EX -To Create Cluster:
+**********************
+
+kops create cluster --name=jagando.online  \
+--state=s3://jagando.online --zones=us-west-2a,us-west-2b,us-west-2c \
+--node-count=3 --master-count=3 --node-size=t3.medium --master-size=t3.medium \
+--master-zones=us-west-2a,us-west-2b,us-west-2c --master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_rsa.pub \
+--dns-zone=jagando.online --yes 
+
+
+
+==> kops validate cluster --wait 10m
+
+==> kops validate cluster   (Cluster_ Name - jagando.online )
+
+==> kops update cluster --name jagando.online --yes --admin
+
+
+
+#Delete the cluster command:
+ (Do not try to delete it manually by going to the AWS management console because there will be a lot of resources have been created while creating the cluster so it is really hard to delete manually.)
+ 
+==> kops delete cluster --name <Name of the cluster> --region us-east-1
+==> kops delete cluster --name jagando.online --region us-west-2 --yes
+
+
+##Smoke-Test:
+*************
+==> kubectl version 
+(Or)
+==> ku version
+
+1. Autofillcommand when we enter first two words
+
+---> echo 'source <(kubectl completion bash)' >>~/.bashrc
+
+---> echo 'complete -o default -F __start_kubectl ku' >>~/.bashrc
+
+
+
+#1.Check Cluster-info
+
+==> kubectl cluster
+
+#2.Check Master and Nodes
+
+==> kubectl get nodes   -------> List all Nodes information
+
+
+#3.check namespaces
+
+==> kubeclt get ns (OR) ==> kubectl get namespaces
+
+
+#4.check mgmt pods kube-system namespace.
+
+==> kubectl get pods -n kube-system
+
+==> kubectl get pods -n kube-system -o wide |grep -i api
+==> kubectl get pods -n kube-system -o wide |grep -i sch
+==> kubectl get pods -n kube-system -o wide |grep -i etcd
+
+==> kubectl get pods -n kube-system -o wide |grep -E 'etcd|api|sch|cont' 
+
+#5. Deploy test POD and check the status.
+#6. Expose POD and check the status.
+#7. Deploy sample deployment.
+#8. Expose deployment with Node port.
+#9. check services which are exposing POD and Deployment to internet.
+#10. Delete a POD and check if it get recreated .
+
+
+
+##Two Formater Command manily used in K8s:
+*****************************************
+==> Imperative formate  ---> By Running command.
+
+              ----> kubectl run testpod1 --image nginx:latest
+
+==> Declarative Formate ---> using YAML (OR) JSON Files.
+
+          ---> kubectl run testpod1 --image nginx:latest --dry-run -o yaml
+
+Ex:
+**
+apiVersion: v1
+kind: Pod
+metadata:
+ labels:
+    run: testpod1
+  name: testpod1
+spec:
+  containers:
+  - image: nginx:latest
+    name: testpod1
+    
+
+===> kubectl get pods
+===> Kubectl get pods -o wide   ------> It display completion Details.
+
+==> Kubectl get service 
+
+(OR)
+===> kubectl expose pod testpod1 --port 80 --target-post 80 --type Nodeport -o yaml --dry-run
+
+==> kubectl get svc
+
+==> kubectl pods -o wide | grep -i testpod1
+
+==> kubect describe svn testpod1
+
+==> kubect describe svn testpod1 | grep -i Endpoints  ----> It will check IP address or connect 
+
+
++++++
+******
+
+##For you IDea (or) Refer for you ID
+---------------------------------------
+1.SSH-ID 
+2.S3-backetName 
+3.Route53
+4.ClusterName
+
+
+
+
+===========######==================
+
+
+#1What is a Kubernetes cluster?
+
+==>A Kubernetes cluster is a set of nodes that run containerized applications. 
+==> Containerizing applications packages an app with its dependences and some necessary services. They are more lightweight and flexible than virtual machines. In this way, Kubernetes clusters allow for applications to be more easily developed, moved and managed.
+
+#2.What is Smoke Test, why we are using on K8s?
+
+==> Smoke testing verifies that a Kubernetes cluster is functioning as expected after a new deployment or upgrade. It reduces downtime risks and ensures reliable deployment by identifying potential issues early on.
+
+
+#3.what is sudo apt update command do?
+
+==> It will update downloads the package lists from the repositories and "updates" them to get information on the newest versions of packages and their dependencies.
+
+
+#4. What is kubectl?
+==> kubectl is a command line tool that enables communications between the Kubernetes API and the control plane. kubectl allows application deployment, cluster resource management, and resource monitoring. Overall, all CRUD operations (Create, Read, Update, and Delete) on Kubernetes resources are carried out with kubectl’s help. 
+
+
+#5.What is a Pod in Kubernetes?
+==> A Pod is the smallest and simplest unit in the Kubernetes object model. ==> It represents a single instance of a running process in a cluster.
+==> A Pod can contain one or more containers, tightly coupled and co-located, that share resources and network namespaces.
+
+
+#6.How To Kill Or Delete A Pod?
+
+===> $ kubectl delete pods <pod-name>
+
+
+##Creating Single Container Pod:
+=================================
+We have two ways:
+~~~~~~~~~~~~~~~~~
+
+#1.Imperative way –
+*******************
+===> $ kubectl run <name of pod> -- image=<name of the image from registry>
+
+#2.Declarative way –
+********************
+
+ apiVersion: v1
+ kind: Pod
+ metadata:
+   name: <name of pod>
+ spec:
+   containers:
+     - name: <name of the container>
+       image: <name of the image from registry>
+       ports:
+        - containerPort: 7500
+       imagePullPolicy: Always
+Save this file with the name pod.yaml and run the following command to create it –
+
+==> $ kubectl create –f pod.yaml
