@@ -113,7 +113,7 @@ kops create cluster --name=<Give_cluster-name> \
 --dns-zone=<Route53_DNS-name> --yes
 
 
-#EX -To Create Cluster:
+#EX -To Create Cluster: ======> us-west-2 (Oregon)region  i creation instance
 **********************
 
 kops create cluster --name=jagando.online  \
