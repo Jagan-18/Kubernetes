@@ -113,8 +113,12 @@ kops create cluster --name=<Give_cluster-name> \
 --dns-zone=<Route53_DNS-name> --yes
 
 
+
+*********************************************************************************************************************
 #EX -To Create Cluster: ======> us-west-2 (Oregon)region  i creation instance
 **********************
+## - Below we can created 3 master and 3  worker node cluster
+--------------------------------------------------------------
 
 kops create cluster --name=jagando.online  \
 --state=s3://jagando.online --zones=us-west-2a,us-west-2b,us-west-2c \
@@ -122,8 +126,18 @@ kops create cluster --name=jagando.online  \
 --master-zones=us-west-2a,us-west-2b,us-west-2c --master-volume-size 10 --node-volume-size 10 \
 --ssh-public-key ~/.ssh/id_rsa.pub \
 --dns-zone=jagando.online --yes 
-
-
+*********************************************************************************************************************
+---
+#EX -To Create Cluster: ======> us-west-2 (Oregon)region  i creation instance
+**********************
+## - Below we can created 1 master and 3 worker node cluster
+-----------------------------------------------------------
+kops create cluster --name=jagando.online  \
+--state=s3://jagando.online --zones=us-west-2a,us-west-2b,us-west-2c \
+--node-count=3  --node-size=t3.medium --master-size=t3.medium \
+ --master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_ed25519.pub \
+--dns-zone=jagando.online --yes 
 
 ==> kops validate cluster --wait 10m
 
