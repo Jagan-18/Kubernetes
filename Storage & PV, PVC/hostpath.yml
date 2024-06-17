@@ -1,0 +1,84 @@
+#Realtime Use Case For Hostpath
+#https://estl.tech/accessing-docker-from-a-kubernetes-pod-68996709c04b
+#cd /tmp
+#git clone https://github.com/mavrick202/dockertest1.git hostpath100
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+            - mountPath: /usr/share/nginx/html
+              name: hostpathvole
+      volumes:
+        - name: hostpathvole
+          hostPath:
+              path: /tmp/hostpath100
+              type: Directory 
+
+---
+#Make sure you have created /tmp/hostpath on all the nodes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+            httpGet:
+                path: /
+                port: 80
+        livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 1
+            httpGet:
+                path: /
+                port: 80
+        volumeMounts:
+            - mountPath: /k8svolume
+              name: hostpathvole
+      volumes:
+        - name: hostpathvole
+          hostPath:
+              path: /tmp/hostpath100
+              type: Directory #POD will fail if directory dont exist

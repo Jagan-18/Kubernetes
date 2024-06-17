@@ -1,0 +1,88 @@
+#for host in '54.147.245.205' '54.197.175.124' '3.86.14.140'; do ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$host sudo touch /hostpathfolder/file3; done
+#Make sure you have created /tmp/hostpath on all the nodes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo hello; sleep 300;done"]
+        volumeMounts:
+          - name: myemptydir
+            mountPath: /imountedit
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+            httpGet:
+                path: /
+                port: 80
+        livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 1
+            httpGet:
+                path: /
+                port: 80
+        volumeMounts:
+            - mountPath: /k8svolume
+              name: myemptydir
+      volumes:
+        - name: myemptydir
+          emptyDir: {}
+          
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: utils
+        image: sreeharshav/utils:latest
+        volumeMounts:
+          - name: myemptydir
+            mountPath: /etc/myemptydir
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+            - mountPath: /tmp/myemptydir
+              name: myemptydir
+      volumes:
+        - name: myemptydir
+          emptyDir: {}

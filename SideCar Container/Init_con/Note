@@ -1,0 +1,11 @@
+Init Containers:
+----------------
+==> We can have one or more init containers.
+==> All init container will be complated before main container starts.
+==> Init containers are helpful to checking the dependencies.
+==> They are exeuted in Sequential order.
+
+
+If my service is not there it will not proside next step.
+# kubect log <service_name> -c <Container_name>
+# kubect expose deployment app1 --name myservice --port 80

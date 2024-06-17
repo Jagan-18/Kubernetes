@@ -1,0 +1,17 @@
+#Off: The VPA does not automatically change the resource requirements of the pods. The recommendations are calculated and can be inspected in the VPA object
+#Initial: Sets initial resource requests for new pods based on historical usage data, without modifying existing pods.
+#Auto: Currently, Recreate might change to in-place updates in the future
+#Recommender: Provides recommendations for pod resource requests based on historical data, allowing administrators to manually adjust them.
+
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: utility-api
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: utility-api
+  updatePolicy:
+    updateMode: "Off"

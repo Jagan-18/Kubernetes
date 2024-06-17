@@ -1,0 +1,57 @@
+#Creating Deployment Cluster
+#ku create deployment app1 --image sreeharshav/testcontainer:v1 --replicas 3 --dry-run -o yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app1
+  name: app1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app1
+  template:
+    metadata:
+      labels:
+        app: app1
+    spec:
+      containers:
+      - image: sreeharshav/testcontainer:v1
+        name: testcontainer
+
+#Creating Cluster IP Service
+# kubectl expose deployment app1 --port 80 --target-port 80 --dry-run -o yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app1
+  name: app1
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: app1
+    type: ClusterIP
+
+#Creating NodePort Service
+# kubectl expose deployment --name app1-np app1 --port 80 --type NodePort -o yaml --dry-run
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app1
+  name: app1-np
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: app1
+    type: NodePort

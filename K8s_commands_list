@@ -1,0 +1,39 @@
+---
+==> ku create deployment app1 --image nginx laterst  --replicas 3 --dry-run -o yaml
+
+#Let's break down each part of the command:
+#******************************************
+
+#kubectl: This is the command-line tool used to interact with Kubernetes clusters
+#1. "kubectl create deployment app1": This part of the command tells kubectl to create a deployment named "app1".
+
+#2. "--image=nginx:latest" : This flag specifies the container image to use for the deployment. In this case, it's the latest version of the Nginx image from the Docker Hub.
+#3. "--replicas=3" : This flag sets the number of replicas for the deployment to 3. This means that Kubernetes will ensure that three instances (pods) of the specified container are running.
+
+#4. "--dry-run=client" : This flag performs a dry run of the command locally without contacting the server. It allows you to preview the changes that would be made without actually making them.
+
+#5. "-o yaml' : This flag specifies the output format of the command. Here, it's set to YAML, which means that the output will be in YAML format.
+
+
+
+
+==> kubectl expose deployment myapp1 --name nginx laterst --port=8000 --target-port 80 --type nodeport
+
+#Let's break down each part of the above command:
+#************************************************
+
+#1.'kubectl expose deployment myapp1' : This part of the command instructs Kubernetes to expose a deployment named "myapp1" as a service. Deployments manage a set of replicated pods.
+
+#2.'--name nginx-latest': Here, you're specifying the name for the newly created service. It will be named "nginx-latest".
+
+#3. '--port=8000' : This flag defines the port on which the service will listen for incoming traffic. In this case, it's port 8000.
+#4. '--target-port 80' : This option specifies the port to which the traffic will be forwarded inside the pods managed by the deployment. It's set to port 80, the default port for the nginx web server in this example.
+#5. '--type nodeport': This flag indicates the type of service to create. NodePort exposes the service on a static port on each node in the cluster. Clients can access the service using the node's IP address and the NodePort allocated for this service.
+
+
+
+===
+
+- https://medium.com/google-cloud/kubectl-commands-101-bbeec4c83e45
+- https://medium.com/@s.atmaramani/kubernetes-commands-cheatsheet-top-50-commands-you-must-remember-4318394a7151
+- https://medium.com/@prateek.malhotra004/kubernetes-essential-commands-and-concepts-4e5b0546795d

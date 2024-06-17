@@ -1,0 +1,11 @@
+---
+apiversion: v1
+kind: Service
+matadata:
+  name: utility-api-service
+spec:
+  selector:
+    app: utility-api
+  ports:
+    - port: 8080
+      targetport: 8080
