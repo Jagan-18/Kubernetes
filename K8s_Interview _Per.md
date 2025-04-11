@@ -29,5 +29,54 @@
 | **Use Case**          | Local development, single-host deployments  | Production environments, large-scale applications      |
 
 ---
+## 3. why do enterprises prefer Kubernetes over docker swarm for large scale deployments.?
 
+| **Category**             | **Kubernetes**                                                                  | **Docker Swarm**                                                               |
+|--------------------------|---------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| **1. Definition**        | Advanced open-source container orchestration platform backed by CNCF            | Simpler native orchestration tool for Docker containers                        |
+| **2. Ease of Setup**     | Complex setup (but manageable with tools like kubeadm, Minikube ect)            | Easy to set up with `docker swarm init`                                        |
+| **3. Scalability**       | Highly scalable (used in production by companies like Google, Netflix, etc.)    | Medium scalability, suitable for small to mid-sized clusters                   |
+| **4. Networking**        | Advanced networking via CNI plugins, network policies, and Ingress              | Simple overlay network, lacks granular control                                 |
+| **5. Load Balancing**    | Built-in load balancing plus support for Ingress Controllers, Envoy, Istio      | Basic internal load balancing, but no native ingress controller                |
+| **6. Fault Tolerance**   | High resilience with self-healing, node health checks, and replica management   | Basic fault tolerance with auto container restart, less robust                 |
+| **7. Service Discovery** | DNS-based with CoreDNS, supports external service integration                   | DNS-based within the Swarm, simpler but functional                             |
+| **8. Storage (Story)**   | Persistent storage support via CSI drivers, dynamic provisioning                | Limited persistent volume support, manual setup required                       |
+| **9. State Management**  | Manages desired state declaratively (self-healing, config drift prevention)     | Manages state imperatively, less control over desired state enforcement        |
+
+---
+
+## 4. How do you run the POD on minikube? what steps will you follow?
+- To run a Pod on Minikube, you follow a few simple steps to:
+   1. Start Minikube
+   
+   2. Create a Pod YAML file
+
+3. Apply it using kubectl
+
+4. Verify the Pod is running
+### **Steps to Run a Pod on Minikube:**
+1. **Start Minikube:** `minikube start`   
+2. **Create a Pod Manifest (YAML):**  
+   Example: `pod.yaml`
+   ```yaml
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: mypod
+   spec:
+     containers:
+     - name: mycontainer
+       image: nginx
+       ports:
+       - containerPort: 80
+   ```
+3. **Apply the Pod YAML:** `kubectl apply -f pod.yaml`
+4. **Check Pod Status:** `kubectl get pods`
+5. **Access the Pod (optional - for testing):** `kubectl port-forward pod/mypod 8080:80`
+6. **View Pod Logs (optional):** `kubectl logs mypod`
+   
+
+---
+
+**In short:** Start Minikube, create a YAML file, apply it with `kubectl`, and verify the pod is running.
 
