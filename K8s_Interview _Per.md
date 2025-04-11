@@ -46,14 +46,12 @@
 ---
 
 ## 4. How do you run the POD on minikube? what steps will you follow?
-- To run a Pod on Minikube, you follow a few simple steps to:
-   1. Start Minikube
-   
-   2. Create a Pod YAML file
-
-3. Apply it using kubectl
-
+To run a Pod on Minikube, you follow a few simple steps to:
+1. Start Minikube
+2. Create a Pod YAML file
+3. 3. Apply it using kubectl
 4. Verify the Pod is running
+   
 ### **Steps to Run a Pod on Minikube:**
 1. **Start Minikube:** `minikube start`   
 2. **Create a Pod Manifest (YAML):**  
