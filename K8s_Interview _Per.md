@@ -46,12 +46,7 @@
 ---
 
 ## 4. How do you run the POD on minikube? what steps will you follow?
-To run a Pod on Minikube, you follow a few simple steps to:
-1. Start Minikube
-2. Create a Pod YAML file
-3. 3. Apply it using kubectl
-4. Verify the Pod is running
-   
+**Minikube** is a tool that lets you run a local single-node Kubernetes cluster on your machine. It's great for learning, development, and testing Kubernetes applications without using cloud infrastructure.
 ### **Steps to Run a Pod on Minikube:**
 1. **Start Minikube:** `minikube start`   
 2. **Create a Pod Manifest (YAML):**  
@@ -72,9 +67,15 @@ To run a Pod on Minikube, you follow a few simple steps to:
 4. **Check Pod Status:** `kubectl get pods`
 5. **Access the Pod (optional - for testing):** `kubectl port-forward pod/mypod 8080:80`
 6. **View Pod Logs (optional):** `kubectl logs mypod`
-   
+---
+## 5.Tell me about pod lifecycle in k8s
+**pod:** The smallest deployable unit in Kubernetes, encapsulating one or more containers.
 
+1. **Pending**  - Pod is accepted by the cluster but not yet running (e.g., waiting for scheduling or image pull).
+2. **Running**  - Pod is scheduled to a node, and at least one container is up and running.
+3. **Succeeded**  - All containers in the pod have completed successfully (for batch jobs).
+4. **Failed**   - One or more containers in the pod terminated with an error.
+5. **Unknown**     - The state of the pod cannot be determined (e.g., due to network issues).
 ---
 
-**In short:** Start Minikube, create a YAML file, apply it with `kubectl`, and verify the pod is running.
 
