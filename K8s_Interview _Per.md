@@ -77,5 +77,52 @@
 4. **Failed**   - One or more containers in the pod terminated with an error.
 5. **Unknown**     - The state of the pod cannot be determined (e.g., due to network issues).
 ---
+## 6. What is an init container, and how is it different from a normal container?
+An Init Container is a special type of container in a Pod that runs before the main (application) containers start.
 
+**Key Differences Between Init Container and Normal Container:**
 
+| **Init Container**                                       | **Normal (App) Container**                                 |
+|----------------------------------------------------------|------------------------------------------------------------|
+| Runs **before** the main container starts                | Runs **as the main application** in the Pod                |
+| **Runs once and exits** when the task is done            | **Runs continuously** until the application stops          |
+| Used for **setup tasks** like config checks, DB readiness| Used to run the **actual application** (e.g., web server)  |
+| Runs **sequentially** (if multiple Init containers exist)| Can run **in parallel** with other app containers          |
+
+**Example Use Case:** - An Init Container can be used to wait for a database to be ready, download a config file, or set permissions — tasks that must finish before your app starts.
+
+---
+## 7. How do you debug a failing Pod?
+
+1. **Check Pod Status:** - ` kubectl get pods `
+
+2. **Describe the Pod:**
+   `kubectl describe pod <pod-name> `
+   - Look for events, errors, image pull issues, failed probes, etc.
+
+3. **Check Container Logs:**
+   ```bash
+   kubectl logs <pod-name>
+   ```
+   - If multiple containers:
+   ```bash
+   kubectl logs <pod-name> -c <container-name>
+   ```
+
+4. **Exec Into the Pod (if running):**
+   ```bash
+   kubectl exec -it <pod-name> -- /bin/sh
+   ```
+
+5. **Check Node Issues (if scheduling failed):**
+   ```bash
+   kubectl get nodes
+   kubectl describe node <node-name>
+   ```
+
+6. **Events & YAML Validation:**
+   - Check `kubectl get events` and validate YAML configs for errors.
+
+---
+
+**In short:** Use `kubectl describe`, `logs`, and `exec` to investigate pod failures, starting with status and events, then checking logs and container behavior.
