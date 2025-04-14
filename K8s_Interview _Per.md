@@ -227,6 +227,7 @@ Absolutely! Here's your **interview-ready answer** — short, structured, and to
 ---
    **Summary in One Line:**
 > **Container** runs the app → **Pod** wraps the container → **ReplicaSet** ensures multiple Pods → **Deployment** manages everything (scaling, updates, rollback).
+
 **How they work together:** - Deployment → manages ReplicaSet → maintains Pods → runs Containers
 ---
 
