@@ -93,36 +93,22 @@ An Init Container is a special type of container in a Pod that runs before the m
 
 ---
 ## 7. How do you debug a failing Pod?
-
+**In short:** Use `kubectl describe`, `logs`, and `exec` to investigate pod failures, starting with status and events, then checking logs and container behavior.
 1. **Check Pod Status:** - ` kubectl get pods `
-
-2. **Describe the Pod:**
-   `kubectl describe pod <pod-name> `
+2. **Describe the Pod:**  `kubectl describe pod <pod-name> `
    - Look for events, errors, image pull issues, failed probes, etc.
-
-3. **Check Container Logs:**
-   ```bash
-   kubectl logs <pod-name>
-   ```
-   - If multiple containers:
-   ```bash
-   kubectl logs <pod-name> -c <container-name>
-   ```
-
-4. **Exec Into the Pod (if running):**
-   ```bash
-   kubectl exec -it <pod-name> -- /bin/sh
-   ```
-
+3. **Check Container Logs:** `kubectl logs <pod-name>`
+  - If multiple containers: - `kubectl logs <pod-name> -c <container-name>`
+4. **Exec Into the Pod (if running):** - `kubectl exec -it <pod-name> -- /bin/sh`
 5. **Check Node Issues (if scheduling failed):**
    ```bash
    kubectl get nodes
    kubectl describe node <node-name>
    ```
-
-6. **Events & YAML Validation:**
-   - Check `kubectl get events` and validate YAML configs for errors.
+6. **Events & YAML Validation:**  - Check `kubectl get events` and validate YAML configs for errors.
 
 ---
 
-**In short:** Use `kubectl describe`, `logs`, and `exec` to investigate pod failures, starting with status and events, then checking logs and container behavior.
+
+
+
