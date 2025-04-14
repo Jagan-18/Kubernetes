@@ -258,10 +258,8 @@ A **Selector** in Kubernetes is a way to **filter and select resources** (such a
   
 ---
 ### What is a Service in Kubernetes, and why is it needed?**
-- A **Service** in Kubernetes is an abstraction layer that defines a logical set of Pods and a policy by which to access them.
-- It acts as a stable endpoint (IP address and DNS name) for Pods, which can change over time due to scaling, pod restarts, or updates. 
----
-
+- A Service in Kubernetes is an abstraction that defines a logical set of pods and a policy to access them. It enables communication between pods and external clients or within the cluster.
+  
 #### Why do we need a Service?
 1. **Stable Network Access**: Pods in Kubernetes are dynamic and can be created or destroyed at any time. Since Pods get new IP addresses on restarts, a Service provides a **stable IP address** and **DNS name** for accessing the group of Pods, even when their underlying IPs change.
 2. **Load Balancing**: A Service automatically balances traffic across multiple Pods, helping distribute load efficiently and ensuring high availability.
