@@ -106,14 +106,43 @@ An Init Container is a special type of container in a Pod that runs before the m
    kubectl describe node <node-name>
    ```
 6. **Events & YAML Validation:**  - Check `kubectl get events` and validate YAML configs for errors.
-
 ---
+
 ## 8. How do containers in a Pod communicate with each other?
-1. Containers in the same Pod share the same network namespace, so they can communicate with each other using localhost.
+1. Containers in the **same Pod share the same network namespace**, so they can communicate with each other **using localhost**.
    - **For example**, if one container runs a service on port 8080, the other container can access it at localhost:8080.
-2. This works because they share the same IP address and ports inside the Pod.
-3. Additionally, containers in a Pod can also share volumes, which allows them to exchange data using a shared file system.
+2. This works because they share the **same IP address and ports inside the Pod**.
+3. Additionally, containers in a **Pod can also share volumes**, which allows them to exchange data using a shared file system.
 4. This is useful for scenarios like logging, caching, or temporary storage between containers.
 ---
 
+## 9. What are different ways you ensure a Pod always runs?**
+To ensure a Pod always runs, we can use different Kubernetes controllers and features:
+1. **Deployment** – Automatically restarts Pods if they crash or get deleted. It keeps the desired number of replicas running.
+2. **ReplicaSet** – Ensures a specific number of Pod replicas are always up.
+3. **DaemonSet** – Ensures a Pod runs on **every node** (or selected nodes) in the cluster.
+4. **StatefulSet** – Used for stateful applications and ensures stable identities and persistent storage.
+5. **Liveness and Readiness Probes** – Help detect and restart unhealthy Pods.
+6. **PodDisruptionBudget (PDB)** – Prevents too many Pods from being evicted during node maintenance.
+7. **Node Affinity / Tolerations** – Ensures Pods get scheduled correctly and not stuck in pending state.
+   
+---
+## 10. what is a pod disruption budget(PDB)? why do we need a pod disruption Budget(PDB)if Deployments & Replicas ensure availability?
+**In short:**
+- Deployments & Replicas handle automatic scaling and Pod recovery.
+- PDBs ensure that disruption operations don’t take down too many Pods, maintaining high availability during planned disruptions
+✅ **What is a Pod Disruption Budget (PDB)?**
+A **Pod Disruption Budget (PDB)** defines the **minimum number or percentage of Pods** that **must remain available** during **voluntary disruptions** (like node maintenance, upgrades, or autoscaling).
+---
+**Why do we need a Pod Disruption Budget (PDB) if Deployments & Replicas ensure availability?**
+While Deployments and ReplicaSets ensure the desired number of Pods are always running by automatically replacing failed Pods, they do not account for planned disruptions, like during node upgrades, maintenance, or manual scaling.
 
+**A PDB ensures that:**
+**1.Minimum Availability:** At least a minimum number or percentage of Pods stay running even when disruptions are happening.
+**2.Safe Maintenance:** During planned disruptions (e.g., when a node is drained), Kubernetes respects the PDB, preventing more Pods from being terminated than allowed, ensuring the service remains available.
+**3.Control over Disruptions:** Prevents over-scaling down or accidental termination of too many Pods, which could lead to downtime or degraded performance.
+
+✅ **Example Scenario:**
+If you have 5 replicas in a Deployment and set a PDB that allows a maximum of 1 Pod to be disrupted, Kubernetes will ensure that, even during voluntary disruptions (like during node maintenance), at least 4 Pods will remain running to maintain service availability.
+
+---
