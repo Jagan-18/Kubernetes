@@ -135,14 +135,14 @@ To ensure a Pod always runs, we can use different Kubernetes controllers and fea
 A **Pod Disruption Budget (PDB)** defines the **minimum number or percentage of Pods** that **must remain available** during **voluntary disruptions** (like node maintenance, upgrades, or autoscaling).
 ---
 **Why do we need a Pod Disruption Budget (PDB) if Deployments & Replicas ensure availability?**
-While Deployments and ReplicaSets ensure the desired number of Pods are always running by automatically replacing failed Pods, they do not account for planned disruptions, like during node upgrades, maintenance, or manual scaling.
-
+- While Deployments and ReplicaSets ensure the desired number of Pods are always running by automatically replacing failed Pods, they do not account for planned disruptions, like during node upgrades, maintenance, or manual scaling.
 **A PDB ensures that:**
 **1.Minimum Availability:** At least a minimum number or percentage of Pods stay running even when disruptions are happening.
+
 **2.Safe Maintenance:** During planned disruptions (e.g., when a node is drained), Kubernetes respects the PDB, preventing more Pods from being terminated than allowed, ensuring the service remains available.
+
 **3.Control over Disruptions:** Prevents over-scaling down or accidental termination of too many Pods, which could lead to downtime or degraded performance.
 
-✅ **Example Scenario:**
-If you have 5 replicas in a Deployment and set a PDB that allows a maximum of 1 Pod to be disrupted, Kubernetes will ensure that, even during voluntary disruptions (like during node maintenance), at least 4 Pods will remain running to maintain service availability.
+✅ **Example Scenario:** - If you have 5 replicas in a Deployment and set a PDB that allows a maximum of 1 Pod to be disrupted, Kubernetes will ensure that, even during voluntary disruptions (like during node maintenance), at least 4 Pods will remain running to maintain service availability.
 
 ---
