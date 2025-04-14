@@ -98,7 +98,7 @@ An Init Container is a special type of container in a Pod that runs before the m
 2. **Describe the Pod:**  `kubectl describe pod <pod-name> `
    - Look for events, errors, image pull issues, failed probes, etc.
 3. **Check Container Logs:** `kubectl logs <pod-name>`
-  - If multiple containers: - `kubectl logs <pod-name> -c <container-name>`
+    - If multiple containers: - `kubectl logs <pod-name> -c <container-name>`
 4. **Exec Into the Pod (if running):** - `kubectl exec -it <pod-name> -- /bin/sh`
 5. **Check Node Issues (if scheduling failed):**
    ```bash
