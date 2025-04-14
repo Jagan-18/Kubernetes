@@ -181,7 +181,7 @@ Absolutely! Here's your **interview-ready answer** — short, structured, and to
 
 ---
 
-## 14. Explain Container, Pod, ReplicaSet, and Deployment in Kubernetes. What are they and why are they used?**
+## 13. Explain Container, Pod, ReplicaSet, and Deployment in Kubernetes. What are they and why are they used?**
 #### **1. Container:**
 
 - **What is it?**  
@@ -229,6 +229,43 @@ Absolutely! Here's your **interview-ready answer** — short, structured, and to
 > **Container** runs the app → **Pod** wraps the container → **ReplicaSet** ensures multiple Pods → **Deployment** manages everything (scaling, updates, rollback).
 
 **How they work together:** - Deployment → manages ReplicaSet → maintains Pods → runs Containers
+
 ---
+Great question! Here's a **concise, interview-ready answer** for **Kubernetes Selectors**:
+
+---
+
+## 14. What is a Selector in Kubernetes?
+
+A **Selector** in Kubernetes is a way to **filter and select resources** (such as Pods, Services, ReplicaSets, etc.) based on labels. Kubernetes uses selectors to **identify a set of resources** for scheduling, communication, or management.
+
+### 🔹 **Types of Selectors**
+1. **Label Selector:**
+   -  A **Label Selector** allows you to select resources based on **labels** and **label values**.
+   -  You define a set of **key-value pairs** (labels) to filter resources.
+**Example Use Cases:**
+     - **Services** use label selectors to identify which Pods they should route traffic to.
+     - **ReplicaSets** use label selectors to ensure that the correct Pods are managed.
+ - **Example:**
+     ```yaml
+     selector:
+       matchLabels:
+         app: web-app
+     ```
+ - This would select Pods with the label `app=web-app`.
+
+3. **Field Selector:**
+   - A **Field Selector** allows you to select resources based on **resource fields** like name, namespace, or status.
+**Example Use Case:**
+   - Selecting Pods that are in a specific **namespace** or have a certain **status**.
+ - **Example:** - `kubectl get pods --field-selector status.phase=Running`
+- This selects Pods that are in the `Running` state.
+
+---
+
+
+---
+
+
 
 
