@@ -140,6 +140,7 @@ To ensure a Pod always runs, we can use different Kubernetes controllers and fea
 - While Deployments and ReplicaSets ensure the desired number of Pods are always running by automatically replacing failed Pods, they do not account for planned disruptions, like during node upgrades, maintenance, or manual scaling.
   
 **A PDB ensures that:**
+
 **1.Minimum Availability:** At least a minimum number or percentage of Pods stay running even when disruptions are happening.
 
 **2.Safe Maintenance:** During planned disruptions (e.g., when a node is drained), Kubernetes respects the PDB, preventing more Pods from being terminated than allowed, ensuring the service remains available.
@@ -149,3 +150,81 @@ To ensure a Pod always runs, we can use different Kubernetes controllers and fea
 ✅ **Example Scenario:** - If you have 5 replicas in a Deployment and set a PDB that allows a maximum of 1 Pod to be disrupted, Kubernetes will ensure that, even during voluntary disruptions (like during node maintenance), at least 4 Pods will remain running to maintain service availability.
 
 ---
+
+## 11.How to Safely Drain a Kubernetes Node?
+- Draining a node means safely evicting all Pods from a node so you can perform maintenance, upgrade, or decommission it — without downtime or data loss.
+  
+**Steps to Safely Drain a Node**
+
+| **Step**                         | **Command / Explanation**                                                                                                                      |
+|----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| **1. Cordon the Node**           | Prevent new Pods from being scheduled on the node ```kubectl cordon <node-name>```                                                             |
+| **2. Drain the Node**           | Evict Pods safely (respects PodDisruptionBudgets, avoids DaemonSets) ```kubectl drain <node-name> --ignore-daemonsets --delete-emptydir-data``` |
+| **3. Perform Maintenance**      | Do your update, patch, or other task                                                                                                            |
+| **4. Uncordon the Node**        | Allow the scheduler to place Pods back on the node   ```kubectl uncordon <node-name>```                                                         |
+
+---
+## 12. Can you run a Pod on a specific node? If yes, how?
+- Yes, you can run a Pod on a specific node using nodeName, nodeSelector, or nodeAffinity depending on how strict or flexible you want the scheduling to be.
+
+**Methods to Schedule a Pod on a Specific Node**
+
+| **Method**         | **Description**                                                                  | **Use Case**                           |
+|--------------------|----------------------------------------------------------------------------------|----------------------------------------|
+| `nodeName`         | Hard-code the exact node name where the Pod should run                           | Simple, manual scheduling              |
+| `nodeSelector`     | Match Pod to a node using key-value labels                                       | Basic label-based targeting            |
+| `nodeAffinity`     | Advanced rules with soft/hard preferences using expressions                      | Flexible, scalable node matching       |
+
+---
+
+Absolutely! Here's your **interview-ready answer** — short, structured, and to the point, just like you'd deliver in a real interview:
+
+---
+
+## 14. Explain Container, Pod, ReplicaSet, and Deployment in Kubernetes. What are they and why are they used?**
+#### **1. Container**
+
+- **What is it?**  
+   - A container is a lightweight and smallest unit of execution in kubernetes.
+   - It encapsulates an application and it dependencies.
+   - containers run inside pods.
+- **Why use it?**  
+  - It ensures consistency across environments (dev, test, prod) and allows fast, reliable deployments.
+
+---
+#### **2. Pod**
+
+- **What is it?**  
+  A Pod is the **smallest deployable unit in Kubernetes**. It can have one or more containers that share the same network and storage.
+
+- **Why use it?**  
+  It groups tightly related containers (e.g., app + sidecar) and manages them together.
+
+---
+#### **3. ReplicaSet**
+
+- **What is it?**  
+  A ReplicaSet ensures a **specified number of Pod replicas** are running at all times.
+
+- **Why use it?**  
+  For **high availability** and **self-healing**. If a Pod crashes, the ReplicaSet creates a new one.
+
+---
+#### **4. Deployment**
+
+- **What is it?**  
+  A Deployment is a higher-level abstraction that manages ReplicaSets and Pods. It supports features like **rolling updates** and **rollbacks**.
+
+- **Why use it?**  
+  It simplifies app management. You define the desired state, and Kubernetes takes care of reaching and maintaining it.
+
+---
+
+### 🔁 **Summary in One Line:**
+
+> **Container** runs the app → **Pod** wraps the container → **ReplicaSet** ensures multiple Pods → **Deployment** manages everything (scaling, updates, rollback).
+
+---
+
+Let me know if you want to practice this as a mock Q&A or need a YAML to go along with it!
+
