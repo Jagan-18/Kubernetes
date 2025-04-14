@@ -182,7 +182,7 @@ Absolutely! Here's your **interview-ready answer** — short, structured, and to
 ---
 
 ## 14. Explain Container, Pod, ReplicaSet, and Deployment in Kubernetes. What are they and why are they used?**
-#### **1. Container**
+#### **1. Container:**
 
 - **What is it?**  
    - A container is a lightweight and smallest unit of execution in kubernetes.
@@ -193,7 +193,7 @@ Absolutely! Here's your **interview-ready answer** — short, structured, and to
   - To package application and their dependencies in a portable way.
 
 ---
-#### **2. Pod**
+#### **2. Pod:**
 
 - **What is it?**  
   - A Pod is the **smallest deployable unit in Kubernetes**.
@@ -204,7 +204,7 @@ Absolutely! Here's your **interview-ready answer** — short, structured, and to
    - To run tightly coupled applications (eg: a web app and its sidecar logging agent).
    - To enable sharing of network and storage resources.
 ---
-#### **3. ReplicaSet**
+#### **3. ReplicaSet:**
 
 - **What is it?**  
   -  A ReplicaSet ensures a **specified number of Pod replicas** are running at all times.
@@ -214,7 +214,7 @@ Absolutely! Here's your **interview-ready answer** — short, structured, and to
    - To maintain high availability by ensuring the required number of pods are always running.
    - Used internally by Deployments to scale application up or down.
 ---
-#### **4. Deployment**
+#### **4. Deployment:**
 
 - **What is it?**  
    - A Deployment is a higher-level abstraction that manages ReplicaSets and Pods.
@@ -225,10 +225,9 @@ Absolutely! Here's your **interview-ready answer** — short, structured, and to
   - To ensureZero-downtime deployments with rolling updates.
   - To manage application versions and enable rollbacks.
 ---
-## 🔁 **Summary in One Line:**
-#### How they work together:
-- Deployment → manages ReplicaSet → maintains Pods → runs Containers
-- > **Container** runs the app → **Pod** wraps the container → **ReplicaSet** ensures multiple Pods → **Deployment** manages everything (scaling, updates, rollback).
+   **Summary in One Line:**
+> **Container** runs the app → **Pod** wraps the container → **ReplicaSet** ensures multiple Pods → **Deployment** manages everything (scaling, updates, rollback).
+**How they work together:** - Deployment → manages ReplicaSet → maintains Pods → runs Containers
 ---
 
 
