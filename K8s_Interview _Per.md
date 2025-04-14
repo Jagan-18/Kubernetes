@@ -136,6 +136,7 @@ A **Pod Disruption Budget (PDB)** defines the **minimum number or percentage of 
 ---
 **Why do we need a Pod Disruption Budget (PDB) if Deployments & Replicas ensure availability?**
 - While Deployments and ReplicaSets ensure the desired number of Pods are always running by automatically replacing failed Pods, they do not account for planned disruptions, like during node upgrades, maintenance, or manual scaling.
+  
 **A PDB ensures that:**
 **1.Minimum Availability:** At least a minimum number or percentage of Pods stay running even when disruptions are happening.
 
