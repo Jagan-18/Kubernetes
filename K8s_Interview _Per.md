@@ -108,7 +108,11 @@ An Init Container is a special type of container in a Pod that runs before the m
 6. **Events & YAML Validation:**  - Check `kubectl get events` and validate YAML configs for errors.
 
 ---
-
-
+## 8. How do containers in a Pod communicate with each other?
+1. Containers in the same Pod share the same network namespace, so they can communicate with each other using localhost. For example, if one container runs a service on port 8080, the other container can access it at localhost:8080.
+2. This works because they share the same IP address and ports inside the Pod.
+3. Additionally, containers in a Pod can also share volumes, which allows them to exchange data using a shared file system.
+4. This is useful for scenarios like logging, caching, or temporary storage between containers.
+---
 
 
