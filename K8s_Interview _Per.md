@@ -289,11 +289,7 @@ A **Selector** in Kubernetes is a way to **filter and select resources** (such a
 - **Minikube**: **Full-featured** environment for learning and realistic setups. (For local development, I prefer Minikube.)
 
 ---
-Apologies for the confusion earlier! Here's a **super simple, concise, and interview-ready** answer for how Kubernetes manages sensitive data like database URLs and passwords securely:
-
----
-
-## 18. How does Kubernetes manage sensitive data like database URLs and passwords securely?**
+## 18. How does Kubernetes manage sensitive data like database URLs and passwords securely?  (OR) Imagine deploying an app where you need to store database URLs and passwords securely. so how does Kubernetes manage this?
 Kubernetes uses **Secrets** to securely store and manage sensitive data, such as database URLs and passwords.
 
 - **Secrets** are stored in Kubernetes in an **encoded** format (Base64) and can be accessed by Pods.
