@@ -181,7 +181,7 @@ Absolutely! Here's your **interview-ready answer** — short, structured, and to
 
 ---
 
-### 13. Explain Container, Pod, ReplicaSet, and Deployment in Kubernetes. What are they and why are they used?**
+## 13. Explain Container, Pod, ReplicaSet, and Deployment in Kubernetes. What are they and why are they used?**
 #### **1. Container:**
 
 - **What is it?**  
@@ -231,7 +231,7 @@ Absolutely! Here's your **interview-ready answer** — short, structured, and to
 **How they work together:** - Deployment → manages ReplicaSet → maintains Pods → runs Containers
 
 ---
-### 14. What is a Selector in Kubernetes?
+## 14. What is a Selector in Kubernetes?
 A **Selector** in Kubernetes is a way to **filter and select resources** (such as Pods, Services, ReplicaSets, etc.) based on labels. Kubernetes uses selectors to **identify a set of resources** for scheduling, communication, or management.
 
 #### Types of Selectors:
@@ -257,7 +257,7 @@ A **Selector** in Kubernetes is a way to **filter and select resources** (such a
 - This selects Pods that are in the `Running` state.
   
 ---
-### What is a Service in Kubernetes, and why is it needed?**
+## 15.What is a Service in Kubernetes, and why is it needed?**
 - A Service in Kubernetes is an abstraction that defines a logical set of pods and a policy to access them. It enables communication between pods and external clients or within the cluster.
 ##### Why do we need a Service in Kubernetes?
 1. **Stable Access**:  - Services provide a fixed IP and name, even if Pods change.
@@ -278,7 +278,14 @@ A **Selector** in Kubernetes is a way to **filter and select resources** (such a
 4. **ExternalName**: - Maps the Service to an external DNS name (not commonly used).
 
 ---
-
+## What is Ingress in Kubernetes?
+- Ingress in Kubernetes is an API object that manages external access to services within a cluster, typically HTTP and HTTPS traffic.
+- It acts as a reverse proxy and a load balancer, routing incoming requests to the appropriate service based on the URL path or host.
+**Features:**
+ ● URL-based routing.
+ ● SSL/TLS termination.
+ ● Load balancing.
+---
 
 
 
