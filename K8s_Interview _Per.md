@@ -280,9 +280,6 @@ A **Selector** in Kubernetes is a way to **filter and select resources** (such a
 -  Ingress also supports **SSL/TLS termination**, **authentication**, and **traffic control** features.
 -   It reduces the need for creating multiple `LoadBalancer` or `NodePort` services — saving **cost and complexity**.
 ---
-Sure! Here's a **super simple and concise** answer for your interview:
-
----
 ## 17.Which one would you choose — Minikube or Kind — and why?
 - I’d choose **Kind** if I need a **fast, lightweight** Kubernetes setup for **local development** or **CI/CD testing**. It runs inside **Docker**, so it's quick and uses fewer resources.
 - I’d choose **Minikube** if I need a **more realistic Kubernetes environment** that simulates a full cluster with **VMs**. It's great for **learning Kubernetes** or testing **real-world features** like storage and networking.
@@ -292,6 +289,50 @@ Sure! Here's a **super simple and concise** answer for your interview:
 - **Minikube**: **Full-featured** environment for learning and realistic setups. (For local development, I prefer Minikube.)
 
 ---
+Apologies for the confusion earlier! Here's a **super simple, concise, and interview-ready** answer for how Kubernetes manages sensitive data like database URLs and passwords securely:
+
+---
+
+## 18. How does Kubernetes manage sensitive data like database URLs and passwords securely?**
+Kubernetes uses **Secrets** to securely store and manage sensitive data, such as database URLs and passwords.
+
+- **Secrets** are stored in Kubernetes in an **encoded** format (Base64) and can be accessed by Pods.
+- You can store data in Secrets and then **mount them** either as **environment variables** or **volumes** in your Pods.
+- Kubernetes controls access to Secrets using **RBAC** (Role-Based Access Control), ensuring only authorized users or Pods can access the sensitive information.
+---
+### **Example**:  
+**You can create a Secret like this to store a database password:**
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secret
+type: Opaque
+data:
+  db-url: <encoded-url>
+  db-password: <encoded-password>
+```
+**Then, access it in a Pod as environment variables:**
+```yaml
+env:
+  - name: DB_URL
+    valueFrom:
+      secretKeyRef:
+        name: db-secret
+        key: db-url
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: db-secret
+        key: db-password
+```
+
+**Note:** 
+- ConfigMaps store non-sensitive information like database URLs (in plain text) and app settings.
+- Data is stored as plain text and can be mounted into Pods as environment variables or files.
+> "Kubernetes uses Secrets to securely store sensitive data (like passwords), and ConfigMaps for non-sensitive data. Secrets are encrypted and can be injected into Pods."
+---
+
 
 
 
