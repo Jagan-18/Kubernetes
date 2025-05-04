@@ -329,6 +329,44 @@ env:
 > "Kubernetes uses Secrets to securely store sensitive data (like passwords), and ConfigMaps for non-sensitive data. Secrets are encrypted and can be injected into Pods."
 ---
 
+## 19. Your CI/CD pipeline is successful but Kubernetes deployment fails; pods are stuck in `CrashLoopBackOff` or `Pending`. How do you fix it?
+
+**Step 1: Identify where the failure happens in the pipeline**
+* I start by reviewing the CI/CD tool logs to see if the failure occurs during `kubectl apply`, `helm upgrade`, or during the app startup phase.
+
+**Step 2: Check Kubernetes pod and deployment status**
+* I use:
+  ```bash
+  kubectl get pods
+  kubectl describe pod <pod-name>
+  ```
+  - To inspect pod states like `Pending` or `CrashLoopBackOff`, and look for scheduling or resource-related issues.
+
+**Step 3: View pod logs to diagnose application errors**
+* I run:
+  ```bash
+  kubectl logs <pod-name>
+  ```
+  -To identify crashes, exceptions, misconfigured environment variables, or other issues during container startup.
+
+**Step 4: Run a manual deployment in a test environment**
+* If needed, I test the same image and manifest in a staging environment to isolate the issue from CI/CD.
+
+**Step 5: Inspect readiness/liveness probes and resource limits**
+* Misconfigured health checks or low CPU/memory can cause the pod to restart or never become ready.
+
+**Step 6: Verify image pull and secrets**
+* If the image is from a private registry, I check that `imagePullSecrets` are set correctly and the image tag exists.
+
+**Step 7: Roll back or patch the deployment if needed**
+* If it's urgent, I use:
+  ```bash
+  kubectl rollout undo deployment/<name>
+  ```
+  - or patch configuration temporarily to restore production quickly.
+
+---
+
 
 
 
