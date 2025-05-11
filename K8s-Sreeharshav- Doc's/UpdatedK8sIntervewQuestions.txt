@@ -1,0 +1,338 @@
+**K8s INTERVIEW QUESTIONS**
+
+1)What is Kubernetes, and why is it important for container orchestration?
+Ans:-K8s is an open-source container orchestration tool which manages multiple containers.
+k8s helps in tasks like scaling up n down,ensuring high availibility,distributing workloads and making sure your application is up n running smoothly all the time.
+Container orchestration is important bcoz in a full fledged application u'll have a multiple containers for various components like front-end,back-end,database,monitoring,logging etc and managing these containers can be a challenging process so we'll required a container orchestration tool like k8s.  
+
+2)Explain the core components of Kubernetes architecture.
+Ans:
+Master Node:
+***********
+There are 4 components which is present on the k8s Master node
+a)kube-apiserver:Kube-apiserver is a critical component of the Kubernetes control plane. It serves as the front-end for the Kubernetes control plane and provides the API through which all interactions with the cluster, including cluster management and application deployment are made. 
+
+b)ETCD:- It stores the all master and worker node information(cluster level information)
+
+c)kube-scheduler:- Kube-scheduler is responsible for distributing pods across the worker nodes.
+
+d)Controllers:-It is responsible for managing nodes and pods when they're go down.
+  1-Node Controller
+  2-Replication Controller
+Worker Node:
+*********
+Below are the components of which is present on worker node
+a)Kubelet:-It is an agent running on every worker node,it'll make sure that the containers are running in a pod on node.
+b)kube-proxy:-It maintains network rules, and this rules allows communication to your pod
+c)pods:- Containers run in it and within the container application runs.
+
+3)What is a Pod in Kubernetes? How does it relate to containers?
+Ans:-Pod represents a set of running containers and it is the smallest and simplest object of the k8s.
+Container run in it and within the container application runs.
+
+4)Describe the role of a Kubernetes Worker Node (Minion) in the cluster.
+Ans:-Worker nodes/Minion in Kubernetes are responsible for executing containerized workloads, managing the pod lifecycle, ensuring resource isolation, and providing runtime environments for applications. They are a critical part of a Kubernetes cluster infrastructure.
+
+5)How do you scale applications in Kubernetes? What are Horizontal and Vertical Pod Autoscalers?
+Ans:-Applications can be scale up n down in k8s with the help of deployment file
+"kubectl scale deploy <deployment_name> --replicas=3".
+
+HorizontalPodAutoscaler(HPA):-
+HPA monitors the resource utilization of the pods (usually CPU and, optionally, custom metrics) and automatically scales the number of pod replicas up or down to maintain a specified resource utilization target.
+ If the CPU usage of a pod exceeds a certain threshold, HPA may scale the deployment to add more pod replicas to handle the load.
+
+VerticalPodAutoscaler(VPA):-
+Vertical Pod Autoscaler is designed to adjust the resource requests and limits for individual pods to match their actual resource usage more closely.
+VPA analyzes the historical resource usage patterns of pods and makes recommendations to adjust resource requests and limits to match the actual usage more accurately. This helps avoid over- or under-provisioning.
+If a pod is consistently using less CPU than its requested limit, VPA may recommend lowering the CPU request to optimize resource allocation.
+
+
+6)What is a Kubernetes Service and why is it used?
+Ans:-Service is used to expose the application to the external traffic.
+There are mainly 3 types of services in k8s
+a)ClusterIP:-
+It's a default service of k8s.
+It is used for internal communication within the cluster and not for the external traffic.
+
+b)NodePort:-
+NodePort is used to communicate with external clients/users to pod.
+It is used to expose the applications inside the cluster to outside the cluster.
+The default range of NodePort is 30000-32767.
+
+c)LoadBalancer:-
+It is used to communicate with external clients/users to pod.
+It works only with cloud providers.
+When we use LB type of svc we'll get one URL,with that URL we can expose the application.
+
+7)Explain the difference between a Deployment and a StatefulSet in Kubernetes.
+Ans:-Statefulset is used for the stateful appliactions that require unique identities,stable network identifiers and persistent storage.
+statefulset is used for the applications such as database,key-value stores and distribution system where each pod maintain its own identity & state.
+Deployment are primarily used for the managing stateless applications such as webservers and microservices.
+Also we can't attach pvc to it this makes it suitable for the stateless applications.
+
+8)How does Kubernetes handle container failures and rescheduling?
+Ans:-
+
+9)What is a ConfigMap and a Secret in Kubernetes? How are they used?
+Ans:-secret is used to store sensitive/confidential data such as passwords and tokens whereas configmaps is used to store non-confidential data such as environment variables.
+
+10)Describe the purpose of Kubernetes namespaces and when to use them.
+Ans:-Namespace are a way of organize cluster into a virtual su-clusters.
+Each namespace logically separated from each other but with the ability to communicate with each other.
+Resources of k8s will deploy in namespaces only.
+We use different types of namespaces for different functionalities.
+Suppose we've team of dev team,operations team,devops,app team and database team, for this we've to create namespaces for every team so that they can work on there functionality.
+ 
+
+11)What is the difference between a DaemonSet and a ReplicaSet?
+Ans:-ReplicaSet ensures a certain number of identical pods are running, allowing for scaling and self-healing, while DaemonSet ensures that a specific pod runs on every node in the cluster, making it suitable for system daemons and tasks that need to be performed on each node.
+
+12)How do you perform rolling updates and rollbacks in Kubernetes?
+Ans:-Rolling update can be done by Modifying the yaml file of the resource and replacing it with the new version.
+After doing required changes in the yaml file,we've to fire this cmd
+---> kubectl apply -f <resource_name>.yaml
+we can check whether the rolling update has been done or not
+---> kubectl rollout status deployment my-deployment
+By default, Kubernetes performs a rolling update using a strategy that gradually replaces old pods with new ones. It ensures that a minimum number of replicas are available at all times.
+You can adjust the number of replicas, scaling up or down, if needed, during the rolling update.
+
+Rollingback a deployment in Kubernetes involves reverting to a previous version of the application that was deployed successfully. To perform a rollback, you can use the kubectl command-line tool or update the deployment's YAML manifest.
+a) kubectl rollout history deployment <deployment_name> -n <name_space>
+---->> After this we need to notedown on which version of deployment we want to go.
+b) kubectl rollout undo deployment <deployment_name> --to-revision=<revision_number>
+--->> After firing this cmd rollout has been initialize
+c) kubectl rollout status deployment <deployment_name>
+---->> This cmd is used to see the status of rollback. 
+
+13)Explain the concept of Ingress controllers and Ingress resources.
+Ans:-Ingress controller:Ingress controllers are responsible for routing by accessing the DNS rules applied through the k8s ingress resources.
+
+Ingress resources:K8s Ingress resources is responsible for storing the DNS routing rules in the cluster.
+
+14)What is a Helm chart in Kubernetes, and how is it useful for managing applications?
+Ans:-Helm is widely known as package manager of k8s.
+It is an open-source project.
+The original goal of helm was to provide users with a better way to manage all the k8s yaml files we create on k8s projects.
+In Helm,there charts each chart is a bundle with one or more k8s manifests.
+We just have to fire one single cmd to install our entire application,instead of listing the files to install via kubectl.
+We can also edit the files as per our requirement.
+It also keeps record of every release if something went wrogn we can go back to the previous version.
+Helm chart includes these files
+a)chart.yaml=This is where you'll put info related to ur chart.
+b)values.yaml=This is the main file which contains defaults for variables.
+c)templates.yaml=This is the file where we'll put all the yaml files.Everything present here will be passed on and created in k8s.
+
+15)How do you troubleshoot a Kubernetes cluster when applications are not running as expected?
+Ans:-
+If application is not running properly then this can be happened bcos of many reasons if we want to troubleshoot it then first we've to check cluster health and ensure that all the worker nodes are in ready state after this inspecting the k8s core components with the cmd "kubectl get componentstatuses" checking whether the pod is running or not by describe pods cmd and checking resources usage by pods and nodes, if possible we can rollback to previous stable version of application.
+
+16)What is the difference between a Stateful and Stateless application in Kubernetes, and how would you deploy them differently?
+Ans:-
+
+17)What is a Persistent Volume (PV) and a Persistent Volume Claim (PVC) in Kubernetes?
+Ans:-PV (Persistent Volume) and PVC (Persistent Volume Claim) are concepts in Kubernetes for managing storage resources in a containerized environment. They serve different purposes and work together to provide persistent storage for applications running in Kubernetes.
+
+PV (Persistent Volume):
+A PV is a piece of storage in the cluster that has been provisioned by the administrator. It represents a physical storage resource available for use.
+PVs can be thought of as "storage units" or "storage blocks" in a Kubernetes cluster.
+The administrator creates PVs, and they are globally available for consumption by pods within the cluster.
+PVs have a lifecycle independent of any pod that uses them.
+PVs are often used for managing external storage resources, such as cloud-based disks or network-attached storage (NAS).
+
+PVC (Persistent Volume Claim):
+A PVC is a request for storage by a user or a pod. It is like a "reservation" for storage that a pod needs.
+Pods use PVCs to claim a certain amount of storage from the available PVs.
+PVCs are tied to the lifecycle of a pod. When a pod is deleted, the associated PVC is often deleted as well.
+PVCs are created and managed by users, typically via YAML manifests in a Kubernetes deployment configuration.
+A PVC specifies the desired storage class, access mode, and the required storage capacity.
+The relationship between PVs and PVCs works as follows:
+
+An administrator provisions one or more PVs, making them available in the cluster.
+Users or application developers create PVCs, specifying the storage requirements, such as capacity and access mode.
+When a pod is created that requests a PVC, Kubernetes matches the pod's request with an available PV that fulfills the PVC's requirements. The PV is bound to the PVC.
+The pod then uses the PVC to access the storage as if it were a local volume.
+In summary, PVs are physical storage resources available in the cluster, while PVCs are claims for storage made by pods. PVCs request and use PVs to provide persistent storage for containers running in Kubernetes. This separation of concerns between administrators (PVs) and users/developers (PVCs) allows for efficient and flexible storage management in a Kubernetes environment.
+
+18)Can you explain the concept of container networking in Kubernetes? What is CNI (Container Network Interface)?
+Ans:-
+
+19)How do you secure a Kubernetes cluster? Mention some best practices for Kubernetes security.
+Ans:-We can secure k8s cluster by using latest version of k8s,storing sensitive data in secrets manager or vault like api tokens,passwords,by implementing RBAC to control and restrict user and application access to cluster resources. Only granting necessary permissions,using an official images only,using firewalls and network policies to control ingress and egress traffic,setting-up centralized logging and monitoring with tools like Prometheus, Grafana, and Elasticsearch,regularly reviewing logs and alerts for suspicious activity etc.
+
+20)What are affinity and anti-affinity rules in Kubernetes, and when would you use them?
+Ans:-
+
+21)Describe how you can expose a Kubernetes service externally to the cluster.
+Ans:-we can expose the k8s application to the outside world either by NodePort,LoadBalancer or Ingress controller.
+
+22)What is a PodSecurityPolicy, and why is it important in Kubernetes security?
+Ans:-We are defining Pod Security Policies (PSPs) to enforce security controls on pod specifications, such as allowing only privileged containers when necessary.
+
+23)Explain the role of a Kubernetes Operator and provide an example of when you might use one.
+Ans:-
+
+24)How do you handle configuration management and secrets rotation in Kubernetes?
+Ans:-
+
+25)Can you discuss the differences between Kubernetes and Docker Swarm for container orchestration?
+Ans:-
+
+
+
+
+Kubernetes:- 
+Kubernetes interview Questions :
+==========================================
+26) what is taint and toleration? 
+Ans:-Taints are attributes applied to individual nodes in a Kubernetes cluster. A taint consists of a key, a value, and an effect.
+The key is a string that describes the taint's purpose, and the value is an optional string that provides additional information.
+We can add taint to the node like this
+--->> kubectl taint nodes <node_name> key=value:effect
+
+Tolerations are attributes specified in a pod's configuration that allow the pod to tolerate the taints on nodes. In other words, they define which taints a pod is willing to tolerate.
+A pod can have multiple tolerations, each with a key, an optional value, and an operator (e.g., Exists or Equal).
+
+By using taints and tolerations, you can control which pods are allowed to run on specific nodes based on their attributes and requirements. This feature is particularly useful for scenarios where you need to segregate workloads, allocate resources selectively, or ensure certain nodes are used for particular tasks.
+
+27) node affinity and pod affinity? 
+Ans:-Node Affinity: Node affinity is a property that can be set on a pod. It allows you to specify rules that are based on node labels to ensure that a pod is scheduled on a node with specific labels. Node affinity can be of two types:
+
+RequiredDuringSchedulingIgnoredDuringExecution: Ensures that a pod is always placed on nodes that satisfy the specified node affinity rules during scheduling.
+
+PreferredDuringSchedulingIgnoredDuringExecution: Attempts to schedule a pod on nodes that satisfy the specified node affinity rules during scheduling, but it's not mandatory.
+
+Pod Affinity: Pod affinity is a feature that allows you to specify rules about how pods should be scheduled relative to other pods. It ensures that a pod is scheduled on the same node or a different node as some other specific pods. Pod affinity can also be of two types:
+
+RequiredDuringSchedulingIgnoredDuringExecution: Ensures that a pod is always placed on nodes where certain other pods are already running.
+
+PreferredDuringSchedulingIgnoredDuringExecution: Attempts to schedule a pod on nodes where certain other pods are already running, but it's not mandatory. 
+
+
+28) how to check the logs of a pod or deployment?
+Ans:- kubectl logs <pod_name>/<deployment_name>
+
+29) how to check how many pods are running
+Ans:- kubectl get po -A
+
+30) what are deployment strategy used in your project?
+
+31) what is init container?
+Ans:-In Kubernetes, an "init container" is a special type of container that runs before the main containers within a pod.
+Init containers are used to perform setup or initialization tasks that are necessary for the application containers to start and run successfully.
+The tasks which it generally performs are
+a)Data preloading ,b)secrets and credentials c)Network setup
+d)Preparation and Configuration
+Init containers are defined below the container section in the pod manifest file.
+
+32) what is statefullset?
+Ans:- Statefulset is used for the stateful appliactions that require unique identities,stable network identifiers and persistent storage.
+statefulset is used for the applications such as database,key-value stores and distribution system where each pod maintain its own identity & state.
+
+33) what is ingress:-
+Ans:-Kubernetes Ingress is a powerful way to manage external access to services within your cluster and provides essential features for routing and securing incoming traffic. It allows you to define routing rules and handle HTTPS termination, making it a fundamental component for exposing applications to the internet or to internal users within a Kubernetes cluster.
+
+34) difference between headfull and headless service?
+Ans:-The key difference between a headless service and a regular (ClusterIP) service is that a headless service does not provide load balancing or a single virtual IP address, while a regular service provides load balancing and a stable virtual IP address for accessing a set of pods. Headless services are typically used for stateful applications that require direct access to individual pods, whereas regular services are commonly used for stateless applications where load balancing and service discovery are crucial.
+
+35) difference between secret and configmap?
+Ans:- secret is used to store sensitive/confidential data such as passwords and tokens whereas configmaps is used to store non-confidential data such as environment variables.
+
+36) what is livenessprobe and readynessprobe?
+Ans:- Liveness Probe:
+The livenessProbe is a configuration option in a Kubernetes pod that defines a health check for the container. It determines whether the container is still running correctly and should continue to be part of the pod.
+Kubernetes periodically checks the container's health based on the configured livenessProbe parameters. If the probe fails (e.g., the container's process crashes or becomes unresponsive), Kubernetes takes action, such as restarting the container or the entire pod, depending on the configured failureThreshold and periodSeconds.
+
+ReadinessProbe:
+The readinessProbe is another configuration option in a Kubernetes pod that defines a different type of health check. It determines whether the container is ready to start receiving traffic.
+
+37) how to access other pods in a cluster?
+Ans:-It is done by using ClusterIP/nodeport service/load balancing/ingress controller/port forwarding.
+
+38) what is a pod?
+Ans:- It is the smallest object in the k8s cluster.
+It also represent a set of running containers.
+Containers running in it and within the container application runs.
+
+39) how you will make sure that the database should start first and then application?
+
+40) Types of storage class used in your project?
+
+41) difference between statefullset and stateless?
+Ans:- Statefulset is used for the stateful appliactions that require unique identities,stable network identifiers and persistent storage.
+statefulset is used for the applications such as database,key-value stores and distribution system where each pod maintain its own identity & state.
+Deployment are primarily used for the managing stateless applications such as webservers and microservices.
+Also we can't attach pvc to it this makes it suitable for the stateless applications.
+
+42) describe kubernetes architecture?
+Master Node:
+There are 4 components which is present on the k8s Master node
+a)kube-apiserver:Kube-apiserver is a critical component of the Kubernetes control plane. It serves as the front-end for the Kubernetes control plane and provides the API through which all interactions with the cluster, including cluster management and application deployment are made. 
+b)ETCD:- It stores the all master and worker node information(cluster level information)
+c)kube-scheduler:- Kube-scheduler is responsible for distributing pods across the worker nodes.
+d)Controllers:-It is responsible for managing nodes and pods when they're go down.
+  1-Node Controller
+  2-Replication Controller
+Worker Node:
+Below are the components of which is present on worker node
+1)Kubelet:-It is an agent running on every worker node,it'll make sure that the containers are running in a pod on node.
+2)kube-proxy:-It maintains network rules, and this rules allows communication to your pod
+3)pods:- Containers run in it and within the container application runs.
+
+43) difference between PV and pvc
+Ans:-
+
+44) 2 containers are running inside a pod if one container goes down then will it affect other running container
+
+45)  Update the password in secret without restarting the pod or deployment ,is it possible ?
+Ans:-Yes, it is possible to update the password in a secret without restarting the pod or deployment in Kubernetes. Kubernetes allows you to update secrets without triggering a restart of the associated pods.
+1)Update the changes
+2)watch for changes
+3)Ensure that your pods are using volume mounts or environment variables to consume the secret. By using volume mounts or environment variables, the pods will be able to access the updated secret without requiring a restart.
+
+46) how to rollback the deployment?
+Ans:-Rolling back a deployment in Kubernetes involves reverting to a previous version of the application that was deployed successfully. To perform a rollback, you can use the kubectl command-line tool or update the deployment's YAML manifest.
+a) kubectl rollout history deployment <deployment_name> -n <name_space>
+---->> After this we need to notedown on which version of deployment we want to go.
+b) kubectl rollout undo deployment <deployment_name> --to-revision=<revision_number>
+--->> After firing this cmd rollout has been initialize
+c) kubectl rollout status deployment <deployment_name>
+---->> This cmd is used to see the status of rollback. 
+
+47) what is the reason for pod eviction?
+Ans:-Resource constraints/node failure/out of memomy/node drain/node resources pressure etc.
+
+48) pod is in pending state ,what are the possible reasons?
+Ans:-It is happening due to lack of resources,lack of communication with worker node where this pod is running.
+ 
+49) how you will make sure that in rolling update strategy 2 pods are always available?
+Ans:-
+
+50) crashloopbackoff, what are the possible reasons?
+Ans:-CrashLoopBachOff happened if the container inside the pod crashes.
+we can ensure that it won't happen next time so we want to check this Application error/image issue/network issue/storage issue/missing dependencies/Incorrect configuration etc.
+
+51) why you are using 3 master node in production?
+Ans:- 3 master nodes in production env is generally used for the high availability and k8s also suggests to have atleast 3 master nodes and it is also suggested to have master nodes in only odd numbers (3,5,7,---).
+
+52) how you will make sure that pod should be running on a specific node?
+Ans:-To ensure that a pod runs on a specific node in a Kubernetes cluster, you can use node affinity or node selectors. These features allow you to define rules that dictate which nodes a pod can be scheduled on based on labels or other node attributes.
+
+53) how to check what are the activities performed by the container while creating the pod?
+Ans:- kubectl describe pod <pod_name> -n <name_space>
+                             or  
+    kubectl logs <pod_name> -c <container_name> -n <name_space> 
+
+54) how to get the ip of a pod ?
+Ans:- kubectl describe pod <pod_name> -n <name_space>
+
+55) which network plugin you are using?
+Ans:-We've used Weave Net as a network plug-in.
+There are also some popular network plugins present in the market like calico,flannel,cilium etc.
+
+56) how you are monitoring the kubernetes cluster and the containers?
+Ans:- Prometheus and Grafana
+Prometheus is an open-source tool which is used to collect,store and query metrics on the k8s cluster and application.
+Grafana is often used with Prometheus to create dashboards and visualize metrics.
+
+57) Job should be terminated after 40 seconds ?
+Ans:- ActiveDeadLineSeconds: 40

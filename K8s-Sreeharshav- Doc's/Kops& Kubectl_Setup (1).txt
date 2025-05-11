@@ -1,0 +1,578 @@
+
+
+Step1: Create web DNS name by using hostinger 
+Step2: In AWS account and attach IAM Role to EC2 Instance.
+  - Kops need permissions to access (admin access).
+         1. EC2
+         2. S3
+         3. VPC
+         4. Route53 Domain Name
+         5.Autoscaling
+Step3:  Create Hosted-Zone on Route53 add Value/Route traffic to name space Inside DNS Server.
+Step4: Create AWS_VPC in that subnet, IGW on ubuntu Server and assign role.
+Step5: Generate ssh-keys 
+Step6: Download Kops & Kubectl to /usr/local/bin
+Step7: Edit .bashrc and add all the env variables
+Step8: Create a Cluster using Kops and generate Cluster file.
+
+
+
+##Inside Terminal folling step:
+******************************
+
+==> Sudo apt update
+
+Step5: Generate ssh-key - This keys will used by yhe kubernetes nodes.
+*****
+
+==> ssh-keygen  (Click enter)
+
+==> ll .ssh/ 
+               --> id_rsa (Private Key)
+               --> id_rsa.pub (public Key)
+
+Step6: Download Kops & Kubectl to /usr/local/bin
+*****
+
+##KopsDownload
+==============
+----> Kops Github in that select Kops-linux-amd64 copy the URL
+ 
+==> cd /usr/local/bin/
+
+-----> kopd-linux-amd64
+
+==> wget https://github.com/kubernetes/kops/releases/download/v1.28.4/kops-linux-amd64
+==> ll
+       ------> kops-linux-amd64
+
+--> Rename as Kops
+
+==> mv kops-linux-amd64 kops
+==> chmod 777 kops
+
+##Kubectl download
+   ===============
+==> curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+==> ll
+==> chmod 777 kubectl 
+
+#To check the Kops& kubectl download are not using below command :
+==> cd
+==> kops version
+==> kubectl version 
+
+
+
+Step7: Edit .bashrc and add all the env variables
+*****
+
+==> nano .bashrc
+
+==> Inside .bashrc we need to past blow commnand's
+
+export NAME=k8sclass.xyz
+export KOPS_STATE_STORE=s3://k8sclass.xyz
+export AWS_REGION=us-east-1
+export CLUSTER_NAME=k8sclass.xyz
+export EDITOR='/usr/bin/nano'
+#export K8S_VERSION=1.6.4
+
+
+Ex:
+===
+export NAME=jagando.online
+export KOPS_STATE_STORE=s3://jagando1
+export AWS_REGION=us-east-1
+export CLUSTER_NAME=jagando.online
+export EDITOR='/usr/bin/nano'
+alias ku=kubectl
+
+==> To exit & save terminal:
+                       ---- ctrl + o 
+                       ---- enter
+                       ---- ctrl + x
+==> source .bashrc
+==> env
+
+Step:8 ==> Create a Cluster using Kops and generate Cluster file.
+******
+
+---- DRY RUN ----
+     *******
+kops create cluster --name=jagando.online \
+--state=s3://jagando1 --zones=us-east-1a,us-east-1b,us-east-1c \
+--node-count=3 --master-count=3 --node-size=t3.medium --master-size=t3.medium \
+--master-zones=us-east-1a,us-east-1b,us-east-1c --master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_rsa.pub \
+--dns-zone=jagando.online --yes
+
+==> kops validate cluster --wait 10m
+
+==> kops validate cluster   (Cluster_ Name - jagando.online )
+
+==> kops update cluster --name jagando.online --yes --admin
+
+
+
+==> Delete the cluster command:
+    --------------------------
+kops delete cluster --name <Name of the cluster> --region us-east-1
+kops delete cluster --name jagando.online --region us-east-1 --yes
+
+
+
+
+
+
+Aws_ server name My refer:
+=============================
+1. EC2Instance - K8s_C_D
+2. Route53 -  jagando.online 
+3.  S3Bucket - kubeclass018
+4. VPC - vpc-02022aa58bb233b4f / k8s-vpc
+5. Security Groups - K8s_demo
+6. ssh ----> id_rsa.pub
+
+
+export NAME=<Give_Route53_Name>
+export KOPS_STATE_STORE=s3://<Give_S3Bucket_name>
+export AWS_REGION=us-east-1
+export CLUSTER_NAME=k8sclass.xyz
+export EDITOR='/usr/bin/nano'
+#export K8S_VERSION=1.6.4
+
+
+Ex:
+===
+export NAME=jagando.online
+export KOPS_STATE_STORE=s3://kubeclass018
+export AWS_REGION=us-east-1
+export CLUSTER_NAME=jagando.xyz  
+export EDITOR='/usr/bin/nano'
+alias ku=kubectl
+
+
+
+kops create cluster --name=jagando.xyz \
+--state=s3://kubeclass018 --zones=us-east-1a,us-east-1b,us-east-1c \
+--node-count=3 --master-count=3 --node-size=t3.medium --master-size=t3.medium \
+--master-zones=us-east-1a,us-east-1b,us-east-1c --master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_rsa.pub \
+--dns-zone=jagando.online --yes
+
+
+===> kops delete cluster --name jagando.xyz --region us-east-1 --yes
+
+Smoke-Test:
+**********
+==> 
+
+1. Check Cluster-info
+2. Check Master and Nodes
+3. check namespaces
+4. check mgmt pods kube-system namespace.
+5. Deploy test POD and check the status.
+6. Expose POD and check the status.
+7. Deploy sample deployment.
+8. Expose deployment with Node port.
+9. check services which are exposing POD and Deployment to internet.
+10. Delete a POD and check if it get recreated .
+
+
+
+
+===================================================
+*****************NEW_STEP_CODE**********************
+====================================================
+
+Step1: Create web DNS name by using hostinger 
+Step2: In AWS account and attach IAM Role to EC2 Instance.
+  - Kops need permissions to access (admin access).
+         1. EC2
+         2. S3
+         3. VPC
+         4. Route53 Domain Name
+         5.Autoscaling
+Step3:  Create Hosted-Zone on Route53 add Value/Route traffic to name space Inside DNS Server.
+Step4: Create AWS_VPC in that subnet, IGW on ubuntu Server and assign role.
+Step5: Generate ssh-keys 
+Step6: Download Kops & Kubectl to /usr/local/bin
+Step7: Edit .bashrc and add all the env variables
+Step8: Create a Cluster using Kops and generate Cluster file.
+
+
+
+##Inside Terminal folling step:
+******************************
+
+==> Sudo apt update
+
+Step5: Generate ssh-key - This keys will used by yhe kubernetes nodes.
+*****
+
+==> ssh-keygen  (Click enter)
+
+==> ll .ssh/ 
+               --> id_rsa (Private Key)
+               --> id_rsa.pub (public Key)
+
+==> cd
+
+Step6: Download Kops & Kubectl to /usr/local/bin
+*****
+
+##KopsDownload
+==============
+----> Kops Github in that select Kops-linux-amd64 copy the URL
+ 
+==> cd /usr/local/bin/
+
+-----> kopd-linux-amd64
+
+==> wget https://github.com/kubernetes/kops/releases/download/v1.28.4/kops-linux-amd64
+==> ll
+       ------> kops-linux-amd64
+
+--> Rename as Kops
+
+==> mv kops-linux-amd64 kops
+==> chmod 777 kops
+
+##Kubectl download
+   ===============
+==> curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+==> ll
+==> chmod 777 kubectl 
+
+#To check the Kops& kubectl download are not using below command :
+==> cd
+==> kops version
+==> kubectl version 
+
+
+
+Step7: Edit .bashrc and add all the env variables
+*****
+
+==> nano .bashrc
+
+==> Inside .bashrc we need to past blow commnand's
+
+
+export NAME=jagando.online
+export KOPS_STATE_STORE=s3://jagando.online 
+export AWS_REGION=us-west-2
+export CLUSTER_NAME=jagando.online
+export EDITOR='/usr/bin/nano'
+alias ku=kubectl
+
+
+
+==> To exit & save terminal:
+                       ---- ctrl + o 
+                       ---- enter
+                       ---- ctrl + x
+==> source .bashrc
+==> env
+
+Step:8 ==> Create a Cluster using Kops and generate Cluster file.
+******
+---- DRY RUN ----
+     *******
+Hint:
+=====
+kops create cluster --name=<Give_cluster-name> \
+--state=s3://<S3_bucket-name> --zones=us-east-1a,us-east-1b,us-east-1c \
+--node-count=3 --master-count=3 --node-size=t3.medium --master-size=t3.medium \
+--master-zones=us-east-1a,us-east-1b,us-east-1c --master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_rsa.pub \
+--dns-zone=<Route53_DNS-name> --yes
+
+
+EX -To Create Cluster:
+**********************
+
+kops create cluster --name=jagando.online  \
+--state=s3://jagando.online --zones=us-west-2a,us-west-2b,us-west-2c \
+--node-count=3 --master-count=3 --node-size=t3.medium --master-size=t3.medium \
+--master-zones=us-west-2a,us-west-2b,us-west-2c --master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_rsa.pub \
+--dns-zone=jagando.online --yes 
+
+
+
+==> kops validate cluster --wait 10m
+
+==> kops validate cluster   (Cluster_ Name - jagando.online )
+
+==> kops update cluster --name jagando.online --yes --admin
+
+
+==> Delete the cluster command:
+    --------------------------
+kops delete cluster --name <Name of the cluster> --region us-east-1
+kops delete cluster --name jagando.online --region us-west-2 --yes
+
+
+
+
+Smoke-Test:
+**********
+==> kubectl version 
+(Or)
+==> ku version
+
+==> Autofillcommand
+
+---> echo 'source <(kubectl completion bash)' >>~/.bashrc
+
+---> echo 'complete -o default -F __start_kubectl ku' >>~/.bashrc
+
+
+
+1. Check Cluster-info
+
+==> kubectl cluster
+
+2. Check Master and Nodes
+
+==> kubectl get nodes   -------> List all Nodes information
+
+
+3. check namespaces
+
+==> kubeclt get ns (OR) ==> kubectl get namespaces
+
+
+4. check mgmt pods kube-system namespace.
+
+==> kubectl get pods -n kube-system
+
+==> kubectl get pods -n kube-system -o wide |grep -i api
+==> kubectl get pods -n kube-system -o wide |grep -i sch
+==> kubectl get pods -n kube-system -o wide |grep -i etcd
+
+==> kubectl get pods -n kube-system -o wide |grep -E 'etcd|api|sch|cont' 
+
+5. Deploy test POD and check the status.
+6. Expose POD and check the status.
+7. Deploy sample deployment.
+8. Expose deployment with Node port.
+9. check services which are exposing POD and Deployment to internet.
+10. Delete a POD and check if it get recreated .
+
+
+==> Imperative formate  ---> By Running command.
+
+              ----> kubectl run testpod1 --image nginx:latest
+
+==> Declarative Formate ---> using YAML (OR) JSON Files.
+
+          ---> kubectl run testpod1 --image nginx:latest --dry-run -o yaml
+
+Ex:
+**
+apiVersion: v1
+kind: Pod
+metadata:
+ labels:
+    run: testpod1
+  name: testpod1
+spec:
+  containers:
+  - image: nginx:latest
+    name: testpod1
+    
+
+===> kubectl get pods
+===> Kubectl get pods -o wide   ------> It display completion Details.
+
+==> Kubectl get service 
+
+(OR)
+===> kubectl expose pod testpod1 --port 80 --target-post 80 --type Nodeport -o yaml --dry-run
+
+==> kubectl get svc
+
+==> kubectl pods -o wide | grep -i testpod1
+
+==> kubect describe svn testpod1
+
+==> kubect describe svn testpod1 | grep -i Endpoints  ----> It will check IP address or connect 
+
+My Refer NOTE:
+=============
+ssh ---> id_rsa.pub
+
+S3 Bucket Name - jagando.online
+Route53 ---- jagando.online
+ cluster Name --- jagando.xyz
+
+
+
+
+
+
+
+
+
+ ------------------------------------------------------------------------------
+-  us-west-2 lo (Oregon) lo create one instance 
+- attach iam admin role and give security groups to that instance
+- install kops 
+- export KOPS_STATE_STORE=s3://jagando.online (ee name tho ne bucket create chesna, bucket name Marist ekkada marsala )
+- (ssh-keygen step) 
+-  and give below commands ----->> 
+
+kops create cluster --name=jagando.online  \
+--state=s3://jagando.online --zones=us-west-2a,us-west-2b,us-west-2c \
+--node-count=3 --master-count=3 --node-size=t3.medium --master-size=t3.medium \
+--master-zones=us-west-2a,us-west-2b,us-west-2c --master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_ed25519.pub \
+--dns-zone=jagando.online --yes 
+
+-  kops validate cluster
+
+===================================================
+*****************NEW_STEP_CODE**********************
+====================================================
+
+Step1: Create web DNS name by using hostinger 
+Step2: In AWS account and attach IAM Role to EC2 Instance.
+  - Kops need permissions to access (admin access).
+         1. EC2
+         2. S3
+         3. VPC
+         4. Route53 Domain Name
+         5.Autoscaling
+Step3:  Create Hosted-Zone on Route53 add Value/Route traffic to name space Inside DNS Server.
+Step4: Create AWS_VPC in that subnet, IGW on ubuntu Server and assign role.
+Step5: Generate ssh-keys 
+Step6: Download Kops & Kubectl to /usr/local/bin
+Step7: Edit .bashrc and add all the env variables
+Step8: Create a Cluster using Kops and generate Cluster file.
+
+
+
+##Inside Terminal folling step:
+******************************
+
+==> Sudo apt update
+
+Step5: Generate ssh-key - This keys will used by yhe kubernetes nodes.
+*****
+
+==> ssh-keygen  (Click enter)
+
+==> ll .ssh/ 
+               --> id_rsa (Private Key)
+               --> id_rsa.pub (public Key)
+
+==> cd
+
+Step6: Download Kops & Kubectl to /usr/local/bin
+*****
+
+##KopsDownload
+==============
+----> Kops Github in that select Kops-linux-amd64 copy the URL
+ 
+==> cd /usr/local/bin/
+
+-----> kopd-linux-amd64
+
+==> wget https://github.com/kubernetes/kops/releases/download/v1.28.4/kops-linux-amd64
+==> ll
+       ------> kops-linux-amd64
+
+--> Rename as Kops
+
+==> mv kops-linux-amd64 kops
+==> chmod 777 kops
+
+##Kubectl download
+   ===============
+==> curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
+==> ll
+==> chmod 777 kubectl 
+
+#To check the Kops& kubectl download are not using below command :
+==> cd
+==> kops version
+==> kubectl version 
+
+
+
+Step7: Edit .bashrc and add all the env variables
+*****
+
+==> nano .bashrc
+
+==> Inside .bashrc we need to past blow commnand's
+
+
+       export NAME=jagando.online
+       export KOPS_STATE_STORE=s3://jagando.online 
+       export AWS_REGION=us-west-2
+       export CLUSTER_NAME=jagando.online
+       export EDITOR='/usr/bin/nano'
+       alias ku=kubectl
+
+
+
+==> To exit & save terminal:
+                       ---- ctrl + o 
+                       ---- enter
+                       ---- ctrl + x
+==> source .bashrc
+==> env
+
+Step:8 ==> Create a Cluster using Kops and generate Cluster file.
+******
+---- DRY RUN ----
+     *******
+Hint:
+=====
+kops create cluster --name=<Give_cluster-name> \
+--state=s3://<S3_bucket-name> --zones=us-east-1a,us-east-1b,us-east-1c \
+--node-count=3 --master-count=3 --node-size=t3.medium --master-size=t3.medium \
+--master-zones=us-east-1a,us-east-1b,us-east-1c --master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_rsa.pub \
+--dns-zone=<Route53_DNS-name> --yes
+
+
+EX -To Create Cluster:
+**********************
+
+kops create cluster --name=jagando.online  \
+--state=s3://jagando.online --zones=us-west-2a,us-west-2b,us-west-2c \
+--node-count=3 --master-count=3 --node-size=t3.medium --master-size=t3.medium \
+--master-zones=us-west-2a,us-west-2b,us-west-2c --master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_rsa.pub \
+--dns-zone=jagando.online --yes 
+
+
+
+==> kops validate cluster --wait 10m
+
+==> kops validate cluster   (Cluster_ Name - jagando.online )
+
+==> kops update cluster --name jagando.online --yes --admin
+
+
+==> Delete the cluster command:
+    --------------------------
+kops delete cluster --name <Name of the cluster> --region us-east-1
+kops delete cluster --name jagando.online --region us-east-1 --yes
+
+
+My Refer NOTE:
+=============
+ssh ---> id_rsa.pub
+
+S3 Bucket Name - jagando.online
+Route53 ---- jagando.online
+ cluster Name --- jagando.xyz
