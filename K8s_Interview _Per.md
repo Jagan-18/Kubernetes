@@ -366,6 +366,25 @@ env:
   - or patch configuration temporarily to restore production quickly.
 
 ---
+## 20 . Suppose I have an application for which pod is running on EKS Cluster. Now I want that whenever I hit myapp.com in browser the request should get routed upto that pod. What all steps will you take?  **OR**  - How would you expose a pod in EKS so it's accessible via `myapp.com`?
+
+1. I’ll create a **Kubernetes Service of type LoadBalancer** in front of the pod to make it accessible over the internet.
+2. AWS will automatically provision an **Elastic Load Balancer (ELB)** and provide its **DNS name**.
+3. In **Route53**, I’ll create a DNS record that points `myapp.com` to the ELB DNS.
+4. If I need better routing or HTTPS support, I’ll set up the **AWS ALB Ingress Controller**, define an **Ingress resource**, and use **AWS Certificate Manager (ACM)** to issue an SSL certificate for `myapp.com`.
+
+This setup ensures that traffic from `myapp.com` is securely routed to the pod running inside the EKS cluster.
+
+---
+
+
+
+---
+
+
+---
+
+
 
 
 
