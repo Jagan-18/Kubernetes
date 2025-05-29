@@ -376,6 +376,15 @@ env:
 This setup ensures that traffic from `myapp.com` is securely routed to the pod running inside the EKS cluster.
 
 ---
+### 21.How will you troubleshoot a 403 error code in Kubernetes?**
+A 403 error in Kubernetes usually indicates a **permissions or access issue**. I troubleshoot it as follows:
+1. **Check Ingress Rules**: If using an Ingress Controller (like NGINX), I verify the Ingress resource and annotations. A misconfigured rule or missing backend service can lead to a 403.
+2. **Verify RBAC Permissions**: If the error comes from a service account or API access, I check **RBAC roles and role bindings** to ensure the correct permissions are in place.
+3. **Inspect Network Policies**: I look for **Kubernetes NetworkPolicies** that might be denying access between pods or namespaces.
+4. **Pod & App Logs**: I check logs of the pod receiving the request (or the Ingress Controller) using `kubectl logs` to get detailed error messages.
+5. **Service & Endpoint Check**: Ensure the service routing to the pod is properly configured and has healthy endpoints.
+6. **TLS / Authentication**: If mutual TLS or external auth (e.g., OIDC) is involved, I check certificates and auth configs that might be rejecting requests.
+---
 
 
 
