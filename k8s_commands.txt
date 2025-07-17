@@ -1,0 +1,31 @@
+export NAME=jagando.online
+export KOPS_STATE_STORE=s3://jagando.online 
+export AWS_REGION=us-west-2
+export CLUSTER_NAME=jagando.online
+export EDITOR='/usr/bin/nano'
+alias ku=kubectl
+
+
+
+id_ed25519.pub
+
+
+kops create cluster --name=kjagando.online \
+--state=s3://jagando.online  --zones=us-west-2a,us-west-2b,us-west-2c \
+--node-count=3 --node-size=t3.medium --master-size=t3.medium \
+--master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_rsa.pub \
+--dns-zone=jagando.online --yes
+
+
+kops create cluster --name=jagando.online  \
+--state=s3://jagando.online --zones=us-west-2a,us-west-2b \
+--node-count=2  --node-size=t3.medium --master-size=t3.medium \
+ --master-volume-size 10 --node-volume-size 10 \
+--ssh-public-key ~/.ssh/id_ed25519.pub \
+--dns-zone=jagando.online --yes 
+
+
+echo 'source <(kubectl completion bash)' >>~/.bashrc
+
+ echo 'complete -o default -F __start_kubectl ku' >>~/.bashrc
