@@ -2558,6 +2558,23 @@ kubectl delete pod <pod-name> --grace-period=0 --force
 * In CI/CD → cleanup commands are automated in pipeline jobs.
 
 ---
+# ✅ Summary (Workflow Order)
+
+1. **Cluster setup** → check cluster, contexts
+2. **Namespaces** → isolate environments
+3. **Nodes** → manage cluster machines
+4. **Pods** → run/debug apps
+5. **Deployments** → manage workloads
+6. **Services/Ingress** → expose apps
+7. **ConfigMaps/Secrets** → configs & creds
+8. **Storage** → attach persistent storage
+9. **Jobs/CronJobs** → scheduled tasks
+10. **Monitoring/Events** → check health & metrics
+11. **Debugging** → logs, exec, debug pods
+12. **RBAC** → security policies
+13. **Helm** → manage production-grade apps
+14. **Cleanup** → remove unused resources
+
 ✅ Done! 🎉
 
 
