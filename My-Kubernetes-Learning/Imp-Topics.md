@@ -98,7 +98,7 @@ worker2     Ready    <none>          1m    v1.29.x
 ```
                ┌─────────────────────┐
                │     Master Node     │
-               │--------------------│
+               │---------------------│
                │ kube-apiserver      │
                │ kube-scheduler      │
                │ kube-controller     │
