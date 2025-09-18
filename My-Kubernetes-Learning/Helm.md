@@ -308,6 +308,95 @@ helmfile destroy
 It’s widely used in **production clusters** for environment consistency and CI/CD pipelines.
 
 ---
+# 📘 Helm Core Concepts – Chart, Repository, Release
+
+## 🔹 1. Helm Chart:
+* A **Helm Chart** is a **package** that contains all the Kubernetes manifests (YAML files) needed to deploy an application.
+* It includes:
+
+  * `Chart.yaml` → metadata (name, version, app version).
+  * `values.yaml` → default config values.
+  * `templates/` → actual K8s resource templates.
+
+✅ Think of a Chart like a **Docker image**: reusable and versioned.
+
+**Example:**
+
+```bash
+helm create mychart
+```
+
+This generates a sample chart structure you can customize.
+
+---
+## 🔹 2. Helm Repository:
+* A **Helm Repository** is a **collection of Helm Charts** stored at a remote location (similar to DockerHub for container images).
+* Popular repos:
+
+  * Bitnami → [https://charts.bitnami.com/bitnami](https://charts.bitnami.com/bitnami)
+  * ArtifactHub → [https://artifacthub.io](https://artifacthub.io)
+
+**Commands:**
+
+```bash
+# Add a repo
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+# Update repo
+helm repo update
+
+# Search charts in repo
+helm search repo nginx
+```
+
+✅ Repositories allow **sharing & reusing charts**.
+
+---
+## 🔹 3. Helm Release:
+* A **Release** is a **running instance of a Helm Chart** in your Kubernetes cluster.
+* Every time you install a chart, Helm creates a Release with a unique name.
+
+**Example:**
+
+```bash
+helm install my-nginx bitnami/nginx
+```
+
+* Here:
+
+  * **Chart** = `bitnami/nginx`
+  * **Release** = `my-nginx`
+* You can install the same chart multiple times → each will be a different release.
+
+**Release Lifecycle Commands:**
+
+```bash
+helm list                  # List all releases
+helm upgrade my-nginx ...  # Upgrade release
+helm rollback my-nginx 1   # Rollback to previous version
+helm uninstall my-nginx    # Delete release
+```
+
+---
+## 🔹 Diagram: Helm Chart → Repository → Release:
+```
+   [Helm Repository]
+        |
+        |  (contains multiple Charts)
+        v
+     [Chart: Nginx]
+        |
+        |  helm install my-nginx bitnami/nginx
+        v
+   [Release: my-nginx running in cluster]
+```
+---
+✅ **Summary**:
+* **Chart** = Package (blueprint of app).
+* **Repository** = Storage location for charts.
+* **Release** = Deployed instance of a chart in K8s.
+---
+
 # 📘 **ArgoCD with Helm – GitOps for Kubernetes**
 
 ## 🔹 What is ArgoCD?
