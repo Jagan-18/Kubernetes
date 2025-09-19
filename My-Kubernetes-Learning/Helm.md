@@ -1,6 +1,7 @@
 # 📘 Helm – The Kubernetes Package Manager:
 ---
 ## 🔹 What is Helm?
+
 * Helm is a **package manager for Kubernetes** (similar to `apt` for Ubuntu or `yum` for RHEL).
 * Helm uses **Charts** (pre-configured templates of Kubernetes YAML manifests).
 * Helps in **installing, upgrading, and managing applications** on Kubernetes easily.
@@ -10,6 +11,7 @@
 
 ---
 ## 🔹 Key Concepts in Helm:
+
 1. **Chart**
 
    * A Helm package (collection of YAML templates + metadata).
@@ -391,6 +393,7 @@ helm uninstall my-nginx    # Delete release
    [Release: my-nginx running in cluster]
 ```
 ---
+
 ✅ **Summary**:
 * **Chart** = Package (blueprint of app).
 * **Repository** = Storage location for charts.
